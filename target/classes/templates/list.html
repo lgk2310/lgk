@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <style>
+            tr:nth-of-type(odd){
+                background: lightblue;
+            }
+        </style>
+        <script src="/static/js/jquery-1.12.4.js"></script>
+        <script type="text/javascript">
+            function add(){
+                location.href = "/Insect/toadd";
+            }
+
+            function del(id){
+                $.ajax({
+                    url:"/Insect/delete",
+                    data:{"id":id},
+                    type:"post",
+                    dataType:"text",
+                    success:function (data){
+                        if (data=="true"){
+                            alert("删除成功")
+                            location.href="/Insect/select";
+                        }else {
+                            alert("删除失败")
+                        }
+                    }
+                })
+            }
+        </script>
+    </head>
+    <body>
+        <div align="center" width="800">
+            <h1>昆虫信息管理系统</h1>
+            <form method="post" action="/Insect/select">
+                <span><input type="text" name="name" id="name" placeholder="请输入昆虫名"/></span>
+                所属科目:
+                <select id="cid" name="cid">
+                    <option value="0">--请选择--</option>
+                    <option th:each="insect_category:${categoryList}" th:value="${insect_category.id}" th:text="${insect_category.cname}"></option>
+                </select>
+                <input type="submit" value="提交">
+                <input type="button" value="添加" onclick="add()">
+            </form>
+            <br/>
+            <table width="1200" border="1">
+                <tr>
+                    <th>编号</th>
+                    <th>分类</th>
+                    <th>昆虫名</th>
+                    <th>寿命</th>
+                    <th>地域分布</th>
+                    <th>首次发现时间</th>
+                    <th>操作</th>
+                </tr>
+                <tr th:each="Insect:${insectslist}">
+                    <td th:text="${Insect.id}"></td>
+                    <td th:text="${Insect.cname}"></td>
+                    <td th:text="${Insect.name}"></td>
+                    <td th:text="${Insect.life}"></td>
+                    <td th:text="${Insect.area}"></td>
+                    <td th:text="${#dates.format(Insect.discovery_time,'yyyy-MM-dd')}"></td>
+                    <th><a href="javascript:void(0)" th:onclick="|del(${Insect.id})|">删除</a></th>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

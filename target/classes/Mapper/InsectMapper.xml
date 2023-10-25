@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.lgk.mapper.InsectMapper">
+    <select id="selectAll" resultType="Insect">
+        select i.id,i.name,i.life,i.area,i.discovery_time,c.cname from Insect i,insect_category c where i.cid = c.id
+        <if test="name!=null and name!=''">
+            and i.name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="cid!=0 and cid!=null">
+            and i.cid=#{cid}
+        </if>
+       order by discovery_time desc
+    </select>
+</mapper>
